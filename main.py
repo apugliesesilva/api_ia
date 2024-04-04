@@ -1,6 +1,5 @@
 import nltk
 from flask import Flask, request, jsonify
-
 import requests
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
