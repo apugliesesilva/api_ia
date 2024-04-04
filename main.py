@@ -1,6 +1,5 @@
 import nltk
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import requests
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -8,10 +7,7 @@ from nltk.stem import WordNetLemmatizer
 import string
 import os
 
-
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://pi-unicap.vercel.app"]}})
-
 
 API_URL = "https://api-inference.huggingface.co/models/ggrazzioli/cls_sentimento_sebrae"
 headers = {"Authorization": "Bearer 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"}
@@ -43,12 +39,10 @@ def get_sentimento():
         comentario = data['comentario']
         comentario_preprocessado = preprocess_text(comentario)
         output = query(comentario_preprocessado)
-        print("Output recebido:", output)  # Adicionando log para verificar a estrutura de output
         formatted_output = format_output(output)
         return jsonify({"resultado": formatted_output})
     else:
         return jsonify({"error": "O JSON deve conter uma chave 'comentario' com o texto a ser analisado."}), 400
-
 
 
 def format_output(output):
