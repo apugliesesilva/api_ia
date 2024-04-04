@@ -50,10 +50,5 @@ def format_output(output):
     return formatted_output
 
 if __name__ == '__main__':
-    if 'PORT' in os.environ:
-        # Running on UVicorn if PORT is set (e.g., on Heroku)
-        import uvicorn
-        uvicorn.run("script:app", host="0.0.0.0", port=int(os.environ.get("PORT", 8000)), log_level="info")
-    else:
-        # Running on Gunicorn by default
-        app.run(debug=True)
+    # Running on Gunicorn
+    app.run(debug=True)
