@@ -1,5 +1,6 @@
-import nltk
 from flask import Flask, request, jsonify
+from flask_cors import CORS
+import nltk
 import requests
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -8,6 +9,7 @@ import string
 import os
 
 app = Flask(__name__)
+CORS(app)
 
 API_URL = "https://api-inference.huggingface.co/models/ggrazzioli/cls_sentimento_sebrae"
 headers = {"Authorization": "Bearer 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"}
@@ -52,7 +54,7 @@ def format_output(output):
         score = label_score['score'] * 100
         if score > 50:
             formatted_output.append(f"{label}: {score:.2f}%")
-    return jsonify(formatted_output)
+    return formatted_output
 
 
 if __name__ == '__main__':
