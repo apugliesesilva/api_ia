@@ -1,3 +1,4 @@
+import nltk
 from flask import Flask, request, jsonify
 import requests
 from nltk.tokenize import word_tokenize
@@ -11,22 +12,25 @@ app = Flask(__name__)
 API_URL = "https://api-inference.huggingface.co/models/ggrazzioli/cls_sentimento_sebrae"
 headers = {"Authorization": "Bearer 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"}
 
-import nltk
 nltk.download('punkt')
 nltk.download('stopwords')
 nltk.download('wordnet')
 
+
 def preprocess_text(comment):
     tokens = word_tokenize(comment.lower())
-    tokens = [token for token in tokens if token not in string.punctuation and token not in stopwords.words('portuguese')]
+    tokens = [token for token in tokens if token not in string.punctuation and token not in stopwords.words(
+        'portuguese')]
     lemmatizer = WordNetLemmatizer()
     tokens = [lemmatizer.lemmatize(token) for token in tokens]
     preprocessed_comment = ' '.join(tokens)
     return preprocessed_comment
 
+
 def query(text):
     response = requests.post(API_URL, headers=headers, json={"text": text})
     return response.json()
+
 
 @app.route('/analise', methods=['POST'])
 def get_sentimento():
@@ -40,6 +44,7 @@ def get_sentimento():
     else:
         return jsonify({"error": "O JSON deve conter uma chave 'comentario' com o texto a ser analisado."}), 400
 
+
 def format_output(output):
     formatted_output = []
     for label_score in output:
@@ -49,6 +54,8 @@ def format_output(output):
             formatted_output.append(f"{label}: {score:.2f}%")
     return formatted_output
 
+
 if __name__ == '__main__':
-    # Running on Gunicorn
-    app.run(debug=True)
+    # Running with Gunicorn, listening on 0.0.0.0 and using the PORT environment variable
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
