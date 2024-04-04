@@ -52,7 +52,7 @@ def format_output(output):
         score = label_score['score'] * 100
         if score > 50:
             formatted_output.append(f"{label}: {score:.2f}%")
-    return formatted_output
+    return jsonify(formatted_output)
 
 
 if __name__ == '__main__':
