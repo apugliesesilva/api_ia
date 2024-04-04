@@ -1,5 +1,6 @@
 import nltk
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
@@ -7,7 +8,10 @@ from nltk.stem import WordNetLemmatizer
 import string
 import os
 
+
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": ["http://localhost:3000", "https://pi-unicap.vercel.app"]}})
+
 
 API_URL = "https://api-inference.huggingface.co/models/ggrazzioli/cls_sentimento_sebrae"
 headers = {"Authorization": "Bearer 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"}
